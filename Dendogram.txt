@@ -1,0 +1,34 @@
+TC_Sales --- sales
+
+WINDOW_SUM(SUM([Sales]))/2
+
+TC_Total Sales
+
+WINDOW_SUM(SUM([Sales]))/2
+
+TC_Percentage
+[TC_Sales]/[TC_Total Sales]
+
+TC_Percentage (Adjusted)
+
+[TC_Percentage]/WINDOW_MAX([TC_Percentage])
+TC_Rank
+
+RANK_UNIQUE([TC_Sales],"desc")
+X
+
+((INDEX()-1)*0.12)-6
+TC_Sigmoid
+
+1/(1+EXP(-[X]))
+Y
+
+[TC_Sigmoid]*([TC_Rank]-(WINDOW_MAX([TC_Rank])+1)/2)/100
+
+TC_Size
+
+IF [X] >=6 AND [X] <= 6+(10*[TC_Percentage (Adjusted)]) THEN 
+    1
+ELSE
+    0
+END
